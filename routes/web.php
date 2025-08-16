@@ -7,6 +7,6 @@ Route::get('/', [ContactController::class, 'index'])->name('contact.index');
 Route::post('/guardar-mensaje', [ContactController::class, 'store'])->name('contact.store');
 Route::get('/registros', [ContactController::class, 'registros'])->name('contact.registros');
 
-Route::get('/', function () {
+/* Route::get('/', function () {
     return view('welcome');
-});
+}); */
