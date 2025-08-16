@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registros de Contacto</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <body>
     <div class="container mt-5">
@@ -13,12 +15,19 @@
                 <div class="card shadow">
                     <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
                         <h3 class="mb-0">Registros de Contacto</h3>
-                        <a href="{{ route('contact.index') }}" class="btn btn-light btn-sm">
-                            Nuevo Mensaje
-                        </a>
+                        <div>
+                            @if(!empty($mensajes) && count($mensajes) > 0)
+                                <button class="btn btn-danger btn-sm me-2" id="clearAllBtn" data-bs-toggle="modal" data-bs-target="#clearAllModal">
+                                    <i class="bi bi-trash"></i> Limpiar Todo
+                                </button>
+                            @endif
+                            <a href="{{ route('contact.index') }}" class="btn btn-light btn-sm">
+                                Nuevo Mensaje
+                            </a>
+                        </div>
                     </div>
                     <div class="card-body">
-                        @if(count($mensajes) > 0)
+                        @if(!empty($mensajes) && count($mensajes) > 0)
                             <div class="table-responsive">
                                 <table class="table table-striped table-hover">
                                     <thead class="table-dark">
@@ -28,6 +37,7 @@
                                             <th>Email</th>
                                             <th>Mensaje</th>
                                             <th>Fecha</th>
+                                            <th>Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -61,6 +71,14 @@
                                                         {{ \Carbon\Carbon::parse($mensaje['fecha'])->format('d/m/Y H:i') }}
                                                     </small>
                                                 </td>
+                                                <td>
+                                                    <button class="btn btn-danger btn-sm delete-btn" 
+                                                            data-id="{{ $mensaje['id'] }}"
+                                                            data-nombre="{{ $mensaje['nombre'] }}"
+                                                            title="Eliminar mensaje">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </td>
                                             </tr>
                                             
                                             <!-- Modal para mensaje completo -->
@@ -92,7 +110,7 @@
                             
                             <div class="mt-3">
                                 <div class="alert alert-info">
-                                    <strong>Total de mensajes:</strong> {{ count($mensajes) }}
+                                    <strong>Total de mensajes:</strong> {{ count($mensajes ?? []) }}
                                 </div>
                             </div>
                         @else
